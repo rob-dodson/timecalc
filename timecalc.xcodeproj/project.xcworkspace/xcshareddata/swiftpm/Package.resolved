@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "time",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/davedelong/time",
+      "state" : {
+        "revision" : "f827477216e688ef59b68cada2d038124ec08185",
+        "version" : "1.0.0"
+      }
+    }
+  ],
+  "version" : 2
+}
