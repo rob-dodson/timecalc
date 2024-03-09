@@ -191,17 +191,14 @@ struct CalView: View
                     calcTime()
                 }
                 
-                /*
-                Text(selectedMonth.format(year: .naturalDigits, month: .naturalName))
-                    .fixedSize() // prevent the text from wrapping
-                    .foregroundColor(color)
-                */
-                
                 Spacer()
                 
                 Button(action: 
                 {
                     selectedMonth = selectedMonth.previous
+                    year = selectedMonth.year
+                    month = selectedMonth.format(month:.naturalName)
+                    calcTime()
                 })
                 {
                     Image(systemName: "arrowtriangle.backward.fill")
@@ -211,13 +208,24 @@ struct CalView: View
                 {
                     selectedMonth = Clocks.system.currentMonth
                     selectedDay = Clocks.system.currentDay
+               
+                    year = Clocks.system.currentYear.year
+                    month = selectedMonth.format(month:.naturalName)
+                    day = String(selectedDay.dayOfMonth)
+                    
                     calcTime()
                 })
                 {
                     Text("Today")
                 }
                 
-                Button(action: { selectedMonth = selectedMonth.next })
+                Button(action: 
+                {
+                    selectedMonth = selectedMonth.next
+                    year = selectedMonth.year
+                    month = selectedMonth.format(month:.naturalName)
+                    calcTime()
+                })
                 {
                     Image(systemName: "arrowtriangle.forward.fill")
                 }
