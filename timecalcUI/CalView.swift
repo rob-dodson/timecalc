@@ -253,7 +253,7 @@ struct CalView: View
                     ForEach(week, id: \.self) 
                     { theday in
                         Toggle(isOn: Binding(get: { selectedDay == theday },
-                                             set: { _ in selectedDay = theday; calcTime() }))
+                                             set: { _ in selectedDay = theday; day = String(selectedDay.dayOfMonth);calcTime() }))
                         {
                             Text(theday.format(day: .naturalDigits))
                                 .fixedSize() // prevent the text from wrapping
