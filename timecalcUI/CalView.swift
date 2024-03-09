@@ -15,12 +15,34 @@ struct CalView: View
    
     var color : Color = Color.green
     
+    @State var year : Int = 2000
+    @State var month : String = ""
+    @State var day : String = ""
     @State var hours : String = ""
     @State var minutes : String = ""
     @State var seconds : String = ""
     
     
     let consistentNumberOfWeeks = true
+    
+    var body: some View
+    {
+        VStack
+        {
+            calendarView
+            clockView
+            Spacer()
+        }
+        .onAppear()
+        {
+            year = selectedSecond.year
+            day = selectedDay.dayOfMonth.description
+            month = selectedMonth.format(month:.naturalName)
+            hours = selectedSecond.hour.formatted()
+            minutes = selectedSecond.minute.formatted()
+            seconds = selectedSecond.second.formatted()
+        }
+    }
     
     
     private var weeksForCurrentMonth: Array<[Fixed<Day>]> 
@@ -72,21 +94,7 @@ struct CalView: View
     }
     
     
-    var body: some View
-    {
-        VStack 
-        {
-            calendarView
-            clockView
-            Spacer()
-        }
-        .onAppear()
-        {
-            hours = selectedSecond.hour.formatted()
-            minutes = selectedSecond.minute.formatted()
-            seconds = selectedSecond.second.formatted()
-        }
-    }
+    
 
     private var clockView: some View
     {
@@ -100,8 +108,8 @@ struct CalView: View
                 calcTime()
             }
             
-            
             Text(":")
+            
             TextField("", text:$minutes)
                 .frame(width: 25)
                 .disableAutocorrection(true)
@@ -109,7 +117,9 @@ struct CalView: View
             {
                 calcTime()
             }
+            
             Text(":")
+            
             TextField("", text:$seconds)
                 .frame(width: 25)
                 .disableAutocorrection(true)
@@ -125,12 +135,14 @@ struct CalView: View
         do
         {
             selectedSecond = try Fixed<Second>(region: .current,
-                                               year: selectedMonth.year,
-                                               month: selectedMonth.month,
-                                               day: selectedDay.day,
+                                               year: try Fixed<Year>(stringValue: String(year), rawFormat: "y", region: Region.current).year,
+                                               month: try Fixed<Month>(stringValue: month, rawFormat: "MMMM", region: Region.current).month,
+                                               day: try Fixed<Day>(stringValue: day, rawFormat: "d", region: Region.current).day,
                                                hour: try Fixed<Hour>(stringValue: hours, rawFormat: "hh", region: .current).hour,
                                                minute: try Fixed<Minute>(stringValue: minutes, rawFormat: "mm", region: .current).minute,
                                                second: try Fixed<Second>(stringValue: seconds, rawFormat: "ss", region: .current).second)
+            selectedMonth = selectedSecond.fixedMonth
+            selectedDay = selectedSecond.fixedDay
         }
         catch
         {
@@ -147,9 +159,43 @@ struct CalView: View
             // current month + movement controls
             HStack
             {
+                Picker("", selection: $month)
+                {
+                    ForEach(Calendar.current.monthSymbols, id: \.self)
+                    { month in
+                        Text("\(month)")
+                            .foregroundColor(color)
+                    }
+                }
+                .pickerStyle(.automatic)
+                .frame(width: 100)
+                .onChange(of: month) 
+                { oldValue, newValue in
+                    calcTime()
+                }
+                
+                
+                Stepper 
+                {
+                    Text("\(year.description)")
+                        .foregroundColor(color)
+                }
+            onIncrement:
+                {
+                    year = year + 1
+                    calcTime()
+                }
+            onDecrement:
+                {
+                    year = year - 1
+                    calcTime()
+                }
+                
+                /*
                 Text(selectedMonth.format(year: .naturalDigits, month: .naturalName))
                     .fixedSize() // prevent the text from wrapping
                     .foregroundColor(color)
+                */
                 
                 Spacer()
                 
@@ -197,14 +243,14 @@ struct CalView: View
                 HStack
                 {
                     ForEach(week, id: \.self) 
-                    { day in
-                        Toggle(isOn: Binding(get: { selectedDay == day },
-                                             set: { _ in selectedDay = day;calcTime() }))
+                    { theday in
+                        Toggle(isOn: Binding(get: { selectedDay == theday },
+                                             set: { _ in selectedDay = theday; calcTime() }))
                         {
-                            Text(day.format(day: .naturalDigits))
+                            Text(theday.format(day: .naturalDigits))
                                 .fixedSize() // prevent the text from wrapping
                                 .monospacedDigit()
-                                .opacity(day.month == selectedMonth.month ? 1.0 : 0.2)
+                                .opacity(theday.month == selectedMonth.month ? 1.0 : 0.2)
                                 .frame(maxWidth: .infinity, alignment: .center)
                         }
                         .toggleStyle(DayToggleStyle())

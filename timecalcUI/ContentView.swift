@@ -41,15 +41,17 @@ struct ContentView: View
         return VStack(alignment: .leading)
         {
             Text("From: \(startDay.description)").foregroundColor(.blue)
+                .font(.headline)
             Text("To: \(endDay.description)").foregroundColor(.cyan)
-            Text("\(diffyears.years) years \(diffmonths.months % 12) months")
-            Text("\(diffmonths.months) months \(endDay.dayOfMonth) days")
-            Text("\(diffdays.days) days \(diffhours.hours % 24) hours")
-            Text("\(diffhours.hours) hours \(diffminutes.minutes % 60) minutes")
-            Text("\(diffminutes.minutes) minutes \(diffseconds.seconds % 60) seconds")
+                .font(.headline)
+            Text("\(diffyears.years) years + \(diffmonths.months % 12) months")
+            Text("\(diffmonths.months) months + \(endDay.dayOfMonth) days")
+            Text("\(diffdays.days) days + \(diffhours.hours % 24) hours")
+            Text("\(diffhours.hours) hours + \(diffminutes.minutes % 60) minutes")
+            Text("\(diffminutes.minutes) minutes + \(diffseconds.seconds % 60) seconds")
             Text("\(diffseconds.seconds) seconds")
         }
-        .font(.headline)
+        .font(.body)
         .foregroundColor(.green)
     }
 }
