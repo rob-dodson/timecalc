@@ -98,6 +98,7 @@ struct CalView: View
 
     private var clockView: some View
     {
+                
         return HStack
         {
             TextField("", text:$hours)
@@ -168,7 +169,7 @@ struct CalView: View
                     }
                 }
                 .pickerStyle(.automatic)
-                .frame(width: 100)
+                .frame(width: 120)
                 .onChange(of: month) 
                 { oldValue, newValue in
                     calcTime()

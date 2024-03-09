@@ -17,12 +17,15 @@ struct ContentView: View
     @State var endMonth : Fixed<Month> = Clocks.system.currentMonth
     @State var endDay : Fixed<Day> = Clocks.system.currentDay + .days(1)
     
+    var startColor = Color.green
+    var endColor = Color.cyan
+    
     var body: some View
     {
         VStack(alignment: .leading)
         {
-            CalView(selectedMonth: $startMonth,selectedDay: $startDay,selectedSecond:$startSecond,color: Color.blue)
-            CalView(selectedMonth: $endMonth,selectedDay: $endDay,selectedSecond:$endSecond,color: Color.cyan)
+            CalView(selectedMonth: $startMonth,selectedDay: $startDay,selectedSecond:$startSecond,color: startColor)
+            CalView(selectedMonth: $endMonth,selectedDay: $endDay,selectedSecond:$endSecond,color: endColor)
             calcdiff(start_second:$startSecond,end_second:$endSecond)
         }
         .padding()
@@ -40,9 +43,9 @@ struct ContentView: View
         
         return VStack(alignment: .leading)
         {
-            Text("From: \(startDay.description)").foregroundColor(.blue)
+            Text("From: \(startDay.description)").foregroundColor(startColor)
                 .font(.headline)
-            Text("To: \(endDay.description)").foregroundColor(.cyan)
+            Text("To: \(endDay.description)").foregroundColor(endColor)
                 .font(.headline)
             Text("\(diffyears.years) years + \(diffmonths.months % 12) months")
             Text("\(diffmonths.months) months + \(endDay.dayOfMonth) days")
@@ -52,7 +55,7 @@ struct ContentView: View
             Text("\(diffseconds.seconds) seconds")
         }
         .font(.body)
-        .foregroundColor(.green)
+        .foregroundColor(.gray)
     }
 }
 
