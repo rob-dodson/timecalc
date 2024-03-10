@@ -24,9 +24,18 @@ struct ContentView: View
     {
         VStack(alignment: .leading)
         {
-            CalView(selectedMonth: $startMonth,selectedDay: $startDay,selectedSecond:$startSecond,color: startColor)
-            CalView(selectedMonth: $endMonth,selectedDay: $endDay,selectedSecond:$endSecond,color: endColor)
-            calcdiff(start_second:$startSecond,end_second:$endSecond)
+            CalView(selectedMonth:$startMonth,
+                    selectedDay:$startDay,
+                    selectedSecond:$startSecond,
+                    color:startColor)
+            
+            CalView(selectedMonth:$endMonth,
+                    selectedDay:$endDay,
+                    selectedSecond:$endSecond,
+                    color:endColor)
+            
+            calcdiff(start_second:$startSecond,
+                     end_second:$endSecond)
         }
         .padding()
     }
@@ -42,7 +51,7 @@ struct ContentView: View
         let diffseconds = startSecond.differenceInWholeSeconds(to: endSecond)
         
         var diffmonthextradays = endDay.dayOfMonth
-        var minus : String = startSecond.isAfter(endSecond) ? "-" : ""
+        let minus : String = startSecond.isAfter(endSecond) ? "-" : ""
         
         if diffmonths.months == 0
         {

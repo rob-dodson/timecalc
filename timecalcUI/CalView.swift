@@ -21,8 +21,12 @@ struct CalView: View
     @State var hour : Int = 0
     @State var minute : Int = 0
     @State var second : Int = 0
+    @State var ampm : String = "am"
+    @State var hour24 = true
     
-    let hourrange = 0...23
+    
+    let hourrange12 = 1...12
+    let hourrange24 = 0...23
     let minuterange = 0...59
     let secondrange = 0...59
     
@@ -102,7 +106,7 @@ struct CalView: View
                 
         return HStack
         {
-            Stepper(String(format:"%2d",hour), value: $hour, in: hourrange)
+            Stepper(String(format:"%2d",hour), value: $hour, in: hour24 == true ? hourrange24 : hourrange12)
             {_ in
                 calcTime()
             }
@@ -118,6 +122,20 @@ struct CalView: View
             
             Stepper(String(format:"%02d",second), value: $second, in: secondrange)
             {_ in
+                calcTime()
+            }
+            
+            Picker("", selection: $ampm)
+            {
+                Text("am")
+                    .tag("am")
+                Text("pm")
+                    .tag("pm")
+            }
+            .pickerStyle(.automatic)
+            .frame(width: 75)
+            .onChange(of: ampm)
+            { oldValue, newValue in
                 calcTime()
             }
         }
