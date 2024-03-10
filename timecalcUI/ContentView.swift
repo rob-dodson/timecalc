@@ -42,6 +42,7 @@ struct ContentView: View
         let diffseconds = startSecond.differenceInWholeSeconds(to: endSecond)
         
         var diffmonthextradays = endDay.dayOfMonth
+        var minus : String = startSecond.isAfter(endSecond) ? "-" : ""
         
         if diffmonths.months == 0
         {
@@ -50,18 +51,20 @@ struct ContentView: View
             
         return VStack(alignment: .leading)
         {
-            Text("From: \(startDay.description)").foregroundColor(startColor)
+            Text("From: \(startDay.description)")
+                .foregroundColor(startColor)
                 .font(.headline)
             
-            Text("To: \(endDay.description)").foregroundColor(endColor)
+            Text("To: \(endDay.description)")
+                .foregroundColor(endColor)
                 .font(.headline)
             
-            Text("| \(diffyears.years) years + \(diffmonths.months % 12) months")
-            Text("| \(diffmonths.months) months + \(diffmonthextradays) days")
-            Text("| \(diffdays.days) days + \(diffhours.hours % 24) hours")
-            Text("| \(diffhours.hours) hours + \(diffminutes.minutes % 60) minutes")
-            Text("| \(diffminutes.minutes) minutes + \(diffseconds.seconds % 60) seconds")
-            Text("| \(diffseconds.seconds) seconds")
+            Text("\(minus) \(diffyears.years) years + \(diffmonths.months % 12) months")
+            Text("\(minus) \(diffmonths.months) months + \(diffmonthextradays) days")
+            Text("\(minus) \(diffdays.days) days + \(diffhours.hours % 24) hours")
+            Text("\(minus) \(diffhours.hours) hours + \(diffminutes.minutes % 60) minutes")
+            Text("\(minus) \(diffminutes.minutes) minutes + \(diffseconds.seconds % 60) seconds")
+            Text("\(minus) \(diffseconds.seconds) seconds")
         }
         .font(.body)
         .foregroundColor(.brown)

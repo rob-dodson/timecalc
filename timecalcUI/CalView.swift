@@ -13,11 +13,11 @@ struct CalView: View
     @Binding var selectedDay : Fixed<Day>
     @Binding var selectedSecond : Fixed<Second>
    
-    var color : Color = Color.green
+    var color : Color = Color.white
     
     @State var year : Int = 2000
-    @State var month : String = ""
-    @State var day : String = ""
+    @State var month : String = "January"
+    @State var day : String = "Sunday"
     @State var hour : Int = 0
     @State var minute : Int = 0
     @State var second : Int = 0
@@ -97,8 +97,6 @@ struct CalView: View
     }
     
     
-    
-
     private var clockView: some View
     {
                 
@@ -125,6 +123,7 @@ struct CalView: View
         }
     }
     
+    
     func calcTime()
     {
         do
@@ -136,14 +135,16 @@ struct CalView: View
                                                hour: hour,
                                                minute: minute,
                                                second: second)
+            
             selectedMonth = selectedSecond.fixedMonth
             selectedDay = selectedSecond.fixedDay
         }
         catch
         {
-            print(error)
+            print("calcTime error: \(error)")
         }
     }
+    
     
     private var calendarView: some View
     {
@@ -175,12 +176,12 @@ struct CalView: View
                     Text("\(year.description)")
                         .foregroundColor(color)
                 }
-            onIncrement:
+                onIncrement:
                 {
                     year = year + 1
                     calcTime()
                 }
-            onDecrement:
+                onDecrement:
                 {
                     year = year - 1
                     calcTime()

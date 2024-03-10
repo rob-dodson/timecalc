@@ -39,9 +39,6 @@ while true
                 print("    \(diffhours.hours) hours \(diffminutes.minutes % 60) minutes")
                 print("    \(diffminutes.minutes) minutes \(diffseconds.seconds % 60) seconds")
                 print("    \(diffseconds.seconds) seconds")
-                
-                let n = startDate + .days(5)
-                print("+5: \(n)")
             }
         }
         catch

@@ -1,14 +1,15 @@
 {
+  "originHash" : "eb2fd0d3f303c0aecf07cb9674d33faca9b2d78ad51ccbd8afe5fe7f1f2b0191",
   "pins" : [
     {
       "identity" : "time",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/davedelong/time",
       "state" : {
-        "revision" : "f827477216e688ef59b68cada2d038124ec08185",
-        "version" : "1.0.0"
+        "revision" : "12768223f019154e4c543010176dd0fff3a1f4cf",
+        "version" : "1.0.1"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
