@@ -22,8 +22,7 @@ struct CalView: View
     @State var minute : Int = 0
     @State var second : Int = 0
     @State var ampm : String = "am"
-    @State var hour24 = true
-    
+    @State var hour24 = false
     
     let hourrange12 = 1...12
     let hourrange24 = 0...23
@@ -45,62 +44,14 @@ struct CalView: View
             year = selectedSecond.year
             day = selectedDay.dayOfMonth.description
             month = selectedMonth.format(month:.naturalName)
-            hour = selectedSecond.hour
+            hour = hour24 == true ? selectedSecond.hour : (selectedSecond.hour > 12 ? selectedSecond.hour - 12 : selectedSecond.hour)
+            ampm = selectedSecond.hour > 12 ? "pm" : "am"
             minute = selectedSecond.minute
             second = selectedSecond.second
         }
     }
     
-    
-    private var weeksForCurrentMonth: Array<[Fixed<Day>]> 
-    {
-        var allDays = Array(selectedMonth.days)
-        
-        // pad out the front of the array with any additional days
-        while allDays[0].dayOfWeek != selectedMonth.calendar.firstWeekday
-        {
-            allDays.insert(allDays[0].previous, at: 0)
-        }
-        
-        if consistentNumberOfWeeks
-        {
-            // Apple Calendar shows 6 weeks at a time, so all views have the same vertical height
-            // this eliminates complexity around dynamically resizing the month view
-            while allDays.count < 42
-            {
-                allDays.append(allDays.last!.next)
-            }
-        } 
-        else
-        {
-            repeat 
-            {
-                let proposedNextDay = allDays.last!.next
-                if proposedNextDay.dayOfWeek != selectedMonth.calendar.firstWeekday
-                {
-                    allDays.append(proposedNextDay)
-                } 
-                else
-                {
-                    break
-                }
-            } while true
-        }
-        
-        // all supported calendars have weeks of seven days
-        assert(allDays.count.isMultiple(of: 7))
-        
-        // slice the array into groups of seven
-        let numberOfWeeks = allDays.count / 7
-        
-        return (0 ..< numberOfWeeks).map
-        { weekNumber in
-            let dayRange = (weekNumber * 7) ..< ((weekNumber + 1) * 7)
-            return Array(allDays[dayRange])
-        }
-    }
-    
-    
+   
     private var clockView: some View
     {
                 
@@ -125,18 +76,21 @@ struct CalView: View
                 calcTime()
             }
             
-            Picker("", selection: $ampm)
+            if hour24 == false
             {
-                Text("am")
-                    .tag("am")
-                Text("pm")
-                    .tag("pm")
-            }
-            .pickerStyle(.automatic)
-            .frame(width: 75)
-            .onChange(of: ampm)
-            { oldValue, newValue in
-                calcTime()
+                Picker("", selection: $ampm)
+                {
+                    Text("am")
+                        .tag("am")
+                    Text("pm")
+                        .tag("pm")
+                }
+                .pickerStyle(.automatic)
+                .frame(width: 75)
+                .onChange(of: ampm)
+                { oldValue, newValue in
+                    calcTime()
+                }
             }
         }
     }
@@ -146,12 +100,21 @@ struct CalView: View
     {
         do
         {
+            var actualhour = hour
+            if hour24 == false
+            {
+                if ampm == "pm"
+                {
+                    actualhour = hour + 12
+                }
+            }
+            
             selectedSecond = try Fixed<Second>(region: .current,
                                                year: try Fixed<Year>(stringValue: String(year), rawFormat: "y", region: Region.current).year,
                                                month: try Fixed<Month>(stringValue: month, rawFormat: "MMMM", region: Region.current).month,
                                                day: try Fixed<Day>(stringValue: day, rawFormat: "d", region: Region.current).day,
                                                hour: hour,
-                                               minute: minute,
+                                               minute: actualhour,
                                                second: second)
             
             selectedMonth = selectedSecond.fixedMonth
@@ -163,6 +126,54 @@ struct CalView: View
         }
     }
     
+    
+    private var weeksForCurrentMonth: Array<[Fixed<Day>]>
+    {
+        var allDays = Array(selectedMonth.days)
+        
+        // pad out the front of the array with any additional days
+        while allDays[0].dayOfWeek != selectedMonth.calendar.firstWeekday
+        {
+            allDays.insert(allDays[0].previous, at: 0)
+        }
+        
+        if consistentNumberOfWeeks
+        {
+            // Apple Calendar shows 6 weeks at a time, so all views have the same vertical height
+            // this eliminates complexity around dynamically resizing the month view
+            while allDays.count < 42
+            {
+                allDays.append(allDays.last!.next)
+            }
+        }
+        else
+        {
+            repeat
+            {
+                let proposedNextDay = allDays.last!.next
+                if proposedNextDay.dayOfWeek != selectedMonth.calendar.firstWeekday
+                {
+                    allDays.append(proposedNextDay)
+                }
+                else
+                {
+                    break
+                }
+            } while true
+        }
+        
+        // all supported calendars have weeks of seven days
+        assert(allDays.count.isMultiple(of: 7))
+        
+        // slice the array into groups of seven
+        let numberOfWeeks = allDays.count / 7
+        
+        return (0 ..< numberOfWeeks).map
+        { weekNumber in
+            let dayRange = (weekNumber * 7) ..< ((weekNumber + 1) * 7)
+            return Array(allDays[dayRange])
+        }
+    }
     
     private var calendarView: some View
     {
