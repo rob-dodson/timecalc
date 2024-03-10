@@ -18,10 +18,13 @@ struct CalView: View
     @State var year : Int = 2000
     @State var month : String = ""
     @State var day : String = ""
-    @State var hours : String = ""
-    @State var minutes : String = ""
-    @State var seconds : String = ""
+    @State var hour : Int = 0
+    @State var minute : Int = 0
+    @State var second : Int = 0
     
+    let hourrange = 0...23
+    let minuterange = 0...59
+    let secondrange = 0...59
     
     let consistentNumberOfWeeks = true
     
@@ -38,9 +41,9 @@ struct CalView: View
             year = selectedSecond.year
             day = selectedDay.dayOfMonth.description
             month = selectedMonth.format(month:.naturalName)
-            hours = selectedSecond.hour.formatted()
-            minutes = selectedSecond.minute.formatted()
-            seconds = selectedSecond.second.formatted()
+            hour = selectedSecond.hour
+            minute = selectedSecond.minute
+            second = selectedSecond.second
         }
     }
     
@@ -101,31 +104,22 @@ struct CalView: View
                 
         return HStack
         {
-            TextField("", text:$hours)
-                .frame(width: 25)
-                .disableAutocorrection(true)
-                .onSubmit
-            {
+            Stepper(String(format:"%2d",hour), value: $hour, in: hourrange)
+            {_ in
                 calcTime()
             }
             
             Text(":")
             
-            TextField("", text:$minutes)
-                .frame(width: 25)
-                .disableAutocorrection(true)
-                .onSubmit
-            {
+            Stepper(String(format:"%02d",minute), value: $minute, in: minuterange)
+            {_ in
                 calcTime()
             }
             
             Text(":")
             
-            TextField("", text:$seconds)
-                .frame(width: 25)
-                .disableAutocorrection(true)
-                .onSubmit
-            {
+            Stepper(String(format:"%02d",second), value: $second, in: secondrange)
+            {_ in
                 calcTime()
             }
         }
@@ -139,9 +133,9 @@ struct CalView: View
                                                year: try Fixed<Year>(stringValue: String(year), rawFormat: "y", region: Region.current).year,
                                                month: try Fixed<Month>(stringValue: month, rawFormat: "MMMM", region: Region.current).month,
                                                day: try Fixed<Day>(stringValue: day, rawFormat: "d", region: Region.current).day,
-                                               hour: try Fixed<Hour>(stringValue: hours, rawFormat: "hh", region: .current).hour,
-                                               minute: try Fixed<Minute>(stringValue: minutes, rawFormat: "mm", region: .current).minute,
-                                               second: try Fixed<Second>(stringValue: seconds, rawFormat: "ss", region: .current).second)
+                                               hour: hour,
+                                               minute: minute,
+                                               second: second)
             selectedMonth = selectedSecond.fixedMonth
             selectedDay = selectedSecond.fixedDay
         }

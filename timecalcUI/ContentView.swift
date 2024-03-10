@@ -41,14 +41,23 @@ struct ContentView: View
         let diffminutes = startSecond.differenceInWholeMinutes(to: endSecond)
         let diffseconds = startSecond.differenceInWholeSeconds(to: endSecond)
         
+        var diffmonthextradays = endDay.dayOfMonth
+        
+        if diffmonths.months == 0
+        {
+            diffmonthextradays = diffdays.days
+        }
+            
         return VStack(alignment: .leading)
         {
             Text("From: \(startDay.description)").foregroundColor(startColor)
                 .font(.headline)
+            
             Text("To: \(endDay.description)").foregroundColor(endColor)
                 .font(.headline)
+            
             Text("| \(diffyears.years) years + \(diffmonths.months % 12) months")
-            Text("| \(diffmonths.months) months + \(endDay.dayOfMonth) days")
+            Text("| \(diffmonths.months) months + \(diffmonthextradays) days")
             Text("| \(diffdays.days) days + \(diffhours.hours % 24) hours")
             Text("| \(diffhours.hours) hours + \(diffminutes.minutes % 60) minutes")
             Text("| \(diffminutes.minutes) minutes + \(diffseconds.seconds % 60) seconds")
