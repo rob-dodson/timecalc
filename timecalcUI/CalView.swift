@@ -92,6 +92,14 @@ struct CalView: View
                     calcTime()
                 }
             }
+            
+            Button("Now")
+            {
+                hour = Clocks.system.currentHour.hour
+                minute = Clocks.system.currentMinute.minute
+                second = Clocks.system.currentSecond.second
+                calcTime()
+            }
         }
     }
     
