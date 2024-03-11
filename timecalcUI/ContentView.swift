@@ -68,12 +68,12 @@ struct ContentView: View
                 .foregroundColor(endColor)
                 .font(.headline)
             
-            Text("\(minus) \(diffyears.years) years + \(diffmonths.months % 12) months")
-            Text("\(minus) \(diffmonths.months) months + \(diffmonthextradays) days")
-            Text("\(minus) \(diffdays.days) days + \(diffhours.hours % 24) hours")
-            Text("\(minus) \(diffhours.hours) hours + \(diffminutes.minutes % 60) minutes")
-            Text("\(minus) \(diffminutes.minutes) minutes + \(diffseconds.seconds % 60) seconds")
-            Text("\(minus) \(diffseconds.seconds) seconds")
+            Text("\(minus)\(diffyears.years) years + \(diffmonths.months % 12) months")
+            Text("\(minus)\(diffmonths.months) months + \(diffmonthextradays) days")
+            Text("\(minus)\(diffdays.days) days + \(diffhours.hours % 24) hours")
+            Text("\(minus)\(diffhours.hours) hours + \(diffminutes.minutes % 60) minutes")
+            Text("\(minus)\(diffminutes.minutes) minutes + \(diffseconds.seconds % 60) seconds")
+            Text("\(minus)\(diffseconds.seconds) seconds")
         }
         .font(.body)
         .foregroundColor(.brown)
