@@ -22,7 +22,7 @@ struct CalView: View
     @State var minute : Int = 0
     @State var second : Int = 0
     @State var ampm : String = "am"
-    @State var hour24 = false
+    @State var hour24 = true
     
     let hourrange12 = 1...12
     let hourrange24 = 0...23
@@ -113,8 +113,8 @@ struct CalView: View
                                                year: try Fixed<Year>(stringValue: String(year), rawFormat: "y", region: Region.current).year,
                                                month: try Fixed<Month>(stringValue: month, rawFormat: "MMMM", region: Region.current).month,
                                                day: try Fixed<Day>(stringValue: day, rawFormat: "d", region: Region.current).day,
-                                               hour: hour,
-                                               minute: actualhour,
+                                               hour: actualhour,
+                                               minute: minute,
                                                second: second)
             
             selectedMonth = selectedSecond.fixedMonth
