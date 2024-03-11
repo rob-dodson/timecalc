@@ -11,11 +11,11 @@ import Time
 struct ContentView: View
 {
     @State var startSecond : Fixed<Second> = Clocks.system.currentSecond
-    @State var endSecond : Fixed<Second> = Clocks.system.nextSecond + .days(1)
-    @State var startMonth : Fixed<Month> = Clocks.system.currentMonth
-    @State var startDay : Fixed<Day> = Clocks.system.currentDay
-    @State var endMonth : Fixed<Month> = Clocks.system.currentMonth
-    @State var endDay : Fixed<Day> = Clocks.system.currentDay + .days(1)
+    @State var endSecond   : Fixed<Second> = Clocks.system.nextSecond + .days(1)
+    @State var startMonth  : Fixed<Month> = Clocks.system.currentMonth
+    @State var startDay    : Fixed<Day> = Clocks.system.currentDay
+    @State var endMonth    : Fixed<Month> = Clocks.system.currentMonth
+    @State var endDay      : Fixed<Day> = Clocks.system.currentDay + .days(1)
     
     var startColor = Color.green
     var endColor = Color.cyan
@@ -38,6 +38,19 @@ struct ContentView: View
                      end_second:$endSecond)
         }
         .padding()
+    }
+    
+    
+    func plural(count:Int,amount:String) -> String
+    {
+        if count == 1
+        {
+            return "\(count) \(amount)"
+        }
+        else
+        {
+            return "\(count) \(amount)s"
+        }
     }
     
     
@@ -68,17 +81,18 @@ struct ContentView: View
                 .foregroundColor(endColor)
                 .font(.headline)
             
-            Text("\(minus)\(diffyears.years) years + \(diffmonths.months % 12) months")
-            Text("\(minus)\(diffmonths.months) months + \(diffmonthextradays) days")
-            Text("\(minus)\(diffdays.days) days + \(diffhours.hours % 24) hours")
-            Text("\(minus)\(diffhours.hours) hours + \(diffminutes.minutes % 60) minutes")
-            Text("\(minus)\(diffminutes.minutes) minutes + \(diffseconds.seconds % 60) seconds")
-            Text("\(minus)\(diffseconds.seconds) seconds")
+            Text("\(minus)\(diffyears.years) years + \(plural(count:diffmonths.months % 12, amount:"month"))")
+            Text("\(minus)\(diffmonths.months) months + \(plural(count:diffmonthextradays, amount:"day"))")
+            Text("\(minus)\(diffdays.days) days + \(plural(count:diffhours.hours % 24, amount:"hour"))")
+            Text("\(minus)\(diffhours.hours) hours + \(plural(count:diffminutes.minutes % 60, amount:"minute"))")
+            Text("\(minus)\(diffminutes.minutes) minutes + \(plural(count:diffseconds.seconds % 60, amount:"second"))")
+            Text("\(minus)\(plural(count:diffseconds.seconds,amount:"second"))")
         }
         .font(.body)
-        .foregroundColor(.brown)
+        .foregroundColor(.white)
         .padding()
         .background()
+        .cornerRadius(5.0)
     }
 }
 
