@@ -77,6 +77,8 @@ struct ContentView: View
         }
         .font(.body)
         .foregroundColor(.brown)
+        .padding()
+        .background()
     }
 }
 
