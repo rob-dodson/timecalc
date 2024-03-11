@@ -263,7 +263,7 @@ struct CalView: View
                     Image(systemName: "arrowtriangle.forward.fill")
                 }
             }
-            .font(.headline)
+
             
             // weekday name headers
             HStack
