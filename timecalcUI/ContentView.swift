@@ -63,6 +63,11 @@ struct ContentView: View
         let diffminutes = startSecond.differenceInWholeMinutes(to: endSecond)
         let diffseconds = startSecond.differenceInWholeSeconds(to: endSecond)
         
+        let plusmonths = diffmonths.months % 12
+        let plushours = diffhours.hours % 24
+        let plusminutes = diffminutes.minutes % 60
+        let plusseconds = diffseconds.seconds % 60
+        
         var diffmonthextradays = endDay.dayOfMonth
         let minus : String = startSecond.isAfter(endSecond) ? "-" : ""
         
@@ -81,11 +86,11 @@ struct ContentView: View
                 .foregroundColor(endColor)
                 .font(.headline)
             
-            Text("\(minus)\(diffyears.years) years + \(plural(count:diffmonths.months % 12, amount:"month"))")
-            Text("\(minus)\(diffmonths.months) months + \(plural(count:diffmonthextradays, amount:"day"))")
-            Text("\(minus)\(diffdays.days) days + \(plural(count:diffhours.hours % 24, amount:"hour"))")
-            Text("\(minus)\(diffhours.hours) hours + \(plural(count:diffminutes.minutes % 60, amount:"minute"))")
-            Text("\(minus)\(diffminutes.minutes) minutes + \(plural(count:diffseconds.seconds % 60, amount:"second"))")
+            Text("\(minus)\(plural(count:diffyears.years, amount:"year")) + \(plural(count:plusmonths, amount:"month"))")
+            Text("\(minus)\(plural(count:diffmonths.months, amount:"month")) + \(plural(count:diffmonthextradays, amount:"day"))")
+            Text("\(minus)\(plural(count:diffdays.days, amount:"day")) + \(plural(count:plushours, amount:"hour"))")
+            Text("\(minus)\(plural(count:diffhours.hours, amount:"hour"))  + \(plural(count:plusminutes, amount:"minute"))")
+            Text("\(minus)\(plural(count:diffminutes.minutes, amount:"minute"))  + \(plural(count:plusseconds, amount:"second"))")
             Text("\(minus)\(plural(count:diffseconds.seconds,amount:"second"))")
         }
         .font(.body)
