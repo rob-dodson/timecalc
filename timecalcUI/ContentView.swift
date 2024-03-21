@@ -68,9 +68,9 @@ struct ContentView: View
         let plusminutes = diffminutes.minutes % 60
         let plusseconds = diffseconds.seconds % 60
         
-        var diffmonthextradays = endDay.dayOfMonth
         let minus : String = startSecond.isAfter(endSecond) ? "-" : ""
-        
+
+        var diffmonthextradays = endDay.dayOfMonth
         if diffmonths.months == 0
         {
             diffmonthextradays = diffdays.days
