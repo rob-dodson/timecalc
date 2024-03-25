@@ -11,35 +11,40 @@ import Time
 struct ContentView: View
 {
     @State var startSecond : Fixed<Second> = Clocks.system.currentSecond
-    @State var endSecond   : Fixed<Second> = Clocks.system.nextSecond + .days(1)
-    @State var startMonth  : Fixed<Month> = Clocks.system.currentMonth
-    @State var startDay    : Fixed<Day> = Clocks.system.currentDay
-    @State var endMonth    : Fixed<Month> = Clocks.system.currentMonth
-    @State var endDay      : Fixed<Day> = Clocks.system.currentDay + .days(1)
+    @State var endSecond   : Fixed<Second> = Clocks.system.currentSecond + .days(1)
     
     var startColor = Color.green
     var endColor = Color.cyan
+    
     
     var body: some View
     {
         VStack(alignment: .leading)
         {
-            CalView(selectedMonth:$startMonth,
-                    selectedDay:$startDay,
-                    selectedSecond:$startSecond,
-                    color:startColor)
+            Text("From:")
+                .font(.largeTitle)
+                .foregroundColor(startColor)
+            CalView(selectedSecond:$startSecond,color:startColor)
             
-            CalView(selectedMonth:$endMonth,
-                    selectedDay:$endDay,
-                    selectedSecond:$endSecond,
-                    color:endColor)
+            Spacer()
             
-            calcdiff(start_second:$startSecond,
-                     end_second:$endSecond)
+            Text("To:")
+                .font(.largeTitle)
+                .foregroundColor(endColor)
+            
+            CalView(selectedSecond:$endSecond,color:endColor)
+           
+            Spacer()
+            
+            Text("Differences:")
+                .font(.largeTitle)
+            
+            calcdiff(start_second:$startSecond,end_second:$endSecond)
         }
+        .frame(width: 400,height: 800)
         .padding()
     }
-    
+
     
     func plural(count:Int,amount:String) -> String
     {
@@ -56,42 +61,39 @@ struct ContentView: View
     
     func calcdiff(start_second:Binding<Fixed<Second>>,end_second:Binding<Fixed<Second>>) -> some View
     {
-        let diffyears   = startSecond.differenceInWholeYears(to: endSecond)
-        let diffmonths  = startSecond.differenceInWholeMonths(to: endSecond)
-        let diffdays    = startSecond.differenceInWholeDays(to: endSecond)
-        let diffhours   = startSecond.differenceInWholeHours(to: endSecond)
-        let diffminutes = startSecond.differenceInWholeMinutes(to: endSecond)
-        let diffseconds = startSecond.differenceInWholeSeconds(to: endSecond)
+        let diffyears   = startSecond.differenceInWholeYears(to: endSecond).years
+        let diffmonths  = startSecond.differenceInWholeMonths(to: endSecond).months
+        let diffdays    = startSecond.differenceInWholeDays(to: endSecond).days
+        let diffhours   = startSecond.differenceInWholeHours(to: endSecond).hours
+        let diffminutes = startSecond.differenceInWholeMinutes(to: endSecond).minutes
+        let diffseconds = startSecond.differenceInWholeSeconds(to: endSecond).seconds
         
-        let plusmonths = diffmonths.months % 12
-        let plushours = diffhours.hours % 24
-        let plusminutes = diffminutes.minutes % 60
-        let plusseconds = diffseconds.seconds % 60
+        
+      //  let plusmonths = diffmonths % 12
+     //   let plushours = diffhours % 24
+      //  let plusminutes = diffminutes % 60
+      //  let plusseconds = diffseconds % 60
         
         let minus : String = startSecond.isAfter(endSecond) ? "-" : ""
 
-        var diffmonthextradays = endDay.dayOfMonth
-        if diffmonths.months == 0
-        {
-            diffmonthextradays = diffdays.days
-        }
             
         return VStack(alignment: .leading)
         {
-            Text("From: \(startDay.description)")
+            Text("\(startSecond.fixedDay.description)")
                 .foregroundColor(startColor)
                 .font(.headline)
             
-            Text("To: \(endDay.description)")
+            Text("\(endSecond.fixedDay.description)")
                 .foregroundColor(endColor)
                 .font(.headline)
             
-            Text("\(minus)\(plural(count:diffyears.years, amount:"year")) + \(plural(count:plusmonths, amount:"month"))")
-            Text("\(minus)\(plural(count:diffmonths.months, amount:"month")) + \(plural(count:diffmonthextradays, amount:"day"))")
-            Text("\(minus)\(plural(count:diffdays.days, amount:"day")) + \(plural(count:plushours, amount:"hour"))")
-            Text("\(minus)\(plural(count:diffhours.hours, amount:"hour"))  + \(plural(count:plusminutes, amount:"minute"))")
-            Text("\(minus)\(plural(count:diffminutes.minutes, amount:"minute"))  + \(plural(count:plusseconds, amount:"second"))")
-            Text("\(minus)\(plural(count:diffseconds.seconds,amount:"second"))")
+            Stepper("\(minus)\(plural(count:diffyears, amount:"year"))")     { endSecond = endSecond.nextYear } onDecrement:   { endSecond = endSecond.previousYear }
+            Stepper("\(minus)\(plural(count:diffmonths, amount:"month"))")   { endSecond = endSecond.nextMonth } onDecrement:  { endSecond = endSecond.previousMonth }
+            Stepper("\(minus)\(plural(count:diffhours, amount:"hour"))")     { endSecond = endSecond.nextHour } onDecrement:   { endSecond = endSecond.previousHour }
+            Stepper("\(minus)\(plural(count:diffdays, amount:"day"))")       { endSecond = endSecond.nextDay } onDecrement:    { endSecond = endSecond.previousDay }
+            Stepper("\(minus)\(plural(count:diffminutes, amount:"minute"))") { endSecond = endSecond.nextMinute } onDecrement: { endSecond = endSecond.previousMinute }
+            Stepper("\(minus)\(plural(count:diffseconds, amount:"second"))") { endSecond = endSecond.nextSecond } onDecrement: { endSecond = endSecond.previousSecond }
+
         }
         .font(.body)
         .foregroundColor(.white)

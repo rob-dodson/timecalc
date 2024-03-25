@@ -98,8 +98,8 @@
 		AEA3A51F2B93E3DA007CC808 /* timecalcUI */ = {
 			isa = PBXGroup;
 			children = (
-				AEA3A52D2B93E6E7007CC808 /* CalView.swift */,
 				AEA3A5222B93E3DA007CC808 /* ContentView.swift */,
+				AEA3A52D2B93E6E7007CC808 /* CalView.swift */,
 				AEA3A5202B93E3DA007CC808 /* timecalcUIApp.swift */,
 				AEA3A5242B93E3DC007CC808 /* Assets.xcassets */,
 				AEA3A5262B93E3DC007CC808 /* timecalcUI.entitlements */,

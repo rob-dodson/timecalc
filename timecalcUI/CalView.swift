@@ -5,22 +5,24 @@
 
 import Foundation
 import SwiftUI
+
 import Time
 
-struct CalView: View 
+
+struct CalView: View
 {
-    @Binding var selectedMonth : Fixed<Month>
-    @Binding var selectedDay : Fixed<Day>
     @Binding var selectedSecond : Fixed<Second>
    
     var color : Color = Color.white
     
-    @State var year : Int = 2000
-    @State var month : String = "January"
-    @State var day : String = "Sunday"
-    @State var hour : Int = 0
-    @State var minute : Int = 0
-    @State var second : Int = 0
+    @State var selectedMonth : Fixed<Month> = Clocks.system.currentMonth
+    @State var selectedDay : Fixed<Day> = Clocks.system.currentDay
+    @State var monthName : String = Clocks.system.currentMonth.format(month:.naturalName)
+    @State var dayNumber : String = Clocks.system.currentDay.format(day:.naturalDigits)
+    @State var year : Int = Clocks.system.currentYear.year
+    @State var hour : Int = Clocks.system.currentHour.hour
+    @State var minute : Int = Clocks.system.currentMinute.minute
+    @State var second : Int = Clocks.system.currentSecond.second
     @State var ampm : String = "am"
     @State var hour24 = true
     
@@ -37,24 +39,65 @@ struct CalView: View
         {
             calendarView
             clockView
-            Spacer()
         }
         .onAppear()
         {
-            year = selectedSecond.year
-            day = selectedDay.dayOfMonth.description
-            month = selectedMonth.format(month:.naturalName)
-            hour = hour24 == true ? selectedSecond.hour : (selectedSecond.hour > 12 ? selectedSecond.hour - 12 : selectedSecond.hour)
-            ampm = selectedSecond.hour > 12 ? "pm" : "am"
-            minute = selectedSecond.minute
-            second = selectedSecond.second
+            setup()
+        }
+        .onChange(of: selectedSecond)
+        { oldValue, newValue in
+            selectedSecond = newValue
+            setup()
+            calcTime()
+        }
+    }
+    
+    func setup()
+    {
+        selectedMonth = selectedSecond.fixedMonth
+        selectedDay = selectedSecond.fixedDay
+        dayNumber = selectedDay.format(day:.naturalDigits)
+        monthName = selectedMonth.format(month:.naturalName)
+        year = selectedSecond.year
+        hour = hour24 == true ? selectedSecond.hour : (selectedSecond.hour > 12 ? selectedSecond.hour - 12 : selectedSecond.hour)
+        minute = selectedSecond.minute
+        second = selectedSecond.second
+        ampm = selectedSecond.hour > 12 ? "pm" : "am"
+    }
+    
+    func calcTime()
+    {
+        do
+        {
+            var actualhour = hour
+            if hour24 == false
+            {
+                if ampm == "pm"
+                {
+                    actualhour = hour + 12
+                }
+            }
+            
+            selectedSecond = try Fixed<Second>(region: .current,
+                                               year: year,//try Fixed<Year>(stringValue: String(year), rawFormat: "y", region: Region.current).year,
+                                               month: try Fixed<Month>(stringValue: monthName, rawFormat: "MMMM", region: Region.current).month,
+                                               day: try Fixed<Day>(stringValue: dayNumber, rawFormat: "d", region: Region.current).day,
+                                               hour: actualhour,
+                                               minute: minute,
+                                               second: second)
+            
+            selectedMonth = selectedSecond.fixedMonth
+            selectedDay = selectedSecond.fixedDay
+        }
+        catch
+        {
+            print("calcTime error: \(error)")
         }
     }
     
    
     private var clockView: some View
     {
-                
         return HStack
         {
             Stepper(String(format:"%2d",hour), value: $hour, in: hour24 == true ? hourrange24 : hourrange12)
@@ -103,38 +146,7 @@ struct CalView: View
         }
     }
     
-    
-    func calcTime()
-    {
-        do
-        {
-            var actualhour = hour
-            if hour24 == false
-            {
-                if ampm == "pm"
-                {
-                    actualhour = hour + 12
-                }
-            }
-            
-            selectedSecond = try Fixed<Second>(region: .current,
-                                               year: try Fixed<Year>(stringValue: String(year), rawFormat: "y", region: Region.current).year,
-                                               month: try Fixed<Month>(stringValue: month, rawFormat: "MMMM", region: Region.current).month,
-                                               day: try Fixed<Day>(stringValue: day, rawFormat: "d", region: Region.current).day,
-                                               hour: actualhour,
-                                               minute: minute,
-                                               second: second)
-            
-            selectedMonth = selectedSecond.fixedMonth
-            selectedDay = selectedSecond.fixedDay
-        }
-        catch
-        {
-            print("calcTime error: \(error)")
-        }
-    }
-    
-    
+
     private var weeksForCurrentMonth: Array<[Fixed<Day>]>
     {
         var allDays = Array(selectedMonth.days)
@@ -183,6 +195,7 @@ struct CalView: View
         }
     }
     
+    
     private var calendarView: some View
     {
         let weeks = self.weeksForCurrentMonth
@@ -192,7 +205,7 @@ struct CalView: View
             // current month + movement controls
             HStack
             {
-                Picker("", selection: $month)
+                Picker("", selection: $monthName)
                 {
                     ForEach(Calendar.current.monthSymbols, id: \.self)
                     { month in
@@ -202,7 +215,7 @@ struct CalView: View
                 }
                 .pickerStyle(.automatic)
                 .frame(width: 120)
-                .onChange(of: month) 
+                .onChange(of: monthName)
                 { oldValue, newValue in
                     calcTime()
                 }
@@ -226,25 +239,28 @@ struct CalView: View
                 
                 Spacer()
                 
-                Button(action: 
+                // Month Back
+                Button(action:
                 {
                     selectedMonth = selectedMonth.previous
+                    
                     year = selectedMonth.year
-                    month = selectedMonth.format(month:.naturalName)
+                    monthName = selectedMonth.format(month:.naturalName)
                     calcTime()
                 })
                 {
                     Image(systemName: "arrowtriangle.backward.fill")
                 }
                 
-                Button(action: 
+                // Month today
+                Button(action:
                 {
                     selectedMonth = Clocks.system.currentMonth
                     selectedDay = Clocks.system.currentDay
-               
-                    year = Clocks.system.currentYear.year
-                    month = selectedMonth.format(month:.naturalName)
-                    day = String(selectedDay.dayOfMonth)
+                    
+                    year = selectedMonth.year
+                    monthName = selectedMonth.format(month:.naturalName)
+                    dayNumber = String(selectedDay.dayOfMonth)
                     
                     calcTime()
                 })
@@ -252,18 +268,21 @@ struct CalView: View
                     Text("Today")
                 }
                 
-                Button(action: 
+                // month forward
+                Button(action:
                 {
                     selectedMonth = selectedMonth.next
+                    
                     year = selectedMonth.year
-                    month = selectedMonth.format(month:.naturalName)
+                    monthName = selectedMonth.format(month:.naturalName)
+                    
                     calcTime()
                 })
                 {
                     Image(systemName: "arrowtriangle.forward.fill")
                 }
             }
-
+           
             
             // weekday name headers
             HStack
@@ -286,7 +305,7 @@ struct CalView: View
                     ForEach(week, id: \.self) 
                     { theday in
                         Toggle(isOn: Binding(get: { selectedDay == theday },
-                                             set: { _ in selectedDay = theday; day = String(selectedDay.dayOfMonth);calcTime() }))
+                                             set: { _ in selectedDay = theday; dayNumber = String(selectedDay.dayOfMonth);calcTime() }))
                         {
                             Text(theday.format(day: .naturalDigits))
                                 .fixedSize() // prevent the text from wrapping
