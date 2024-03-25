@@ -205,6 +205,7 @@ struct CalView: View
             // current month + movement controls
             HStack
             {
+                // month picker
                 Picker("", selection: $monthName)
                 {
                     ForEach(Calendar.current.monthSymbols, id: \.self)
@@ -220,8 +221,8 @@ struct CalView: View
                     calcTime()
                 }
                 
-                
-                Stepper 
+                // year stepper
+                Stepper
                 {
                     Text("\(year.description)")
                         .foregroundColor(color)
