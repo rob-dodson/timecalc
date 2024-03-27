@@ -1,8 +1,9 @@
 //
-//  CalendarView.swift
-//  Examples
+//  CalView.swift
+//  timecalcUI
 //
-
+//  Created by Robert Dodson on 3/2/24.
+//
 import Foundation
 import SwiftUI
 
@@ -18,14 +19,9 @@ struct CalView: View
     @State var selectedMonth : Fixed<Month> = Clocks.system.currentMonth
     @State var selectedDay : Fixed<Day> = Clocks.system.currentDay
     @State var monthName : String = Clocks.system.currentMonth.format(month:.naturalName)
-    @State var hour : Int = Clocks.system.currentHour.hour
+    @State var hourName : Int = Clocks.system.currentHour.hour
     @State var ampm : String = "am"
-    @State var hour24 = true
-    
-    let hourrange12 = 1...12
-    let hourrange24 = 0...23
-    let minuterange = 0...59
-    let secondrange = 0...59
+    @State var hourType : String = "24"
     
     let consistentNumberOfWeeks = true
     
@@ -53,8 +49,19 @@ struct CalView: View
         selectedMonth = selectedSecond.fixedMonth
         monthName = selectedMonth.format(month:.naturalName)
         selectedDay = selectedSecond.fixedDay
-        hour = hour24 == true ? selectedSecond.hour : (selectedSecond.hour > 12 ? selectedSecond.hour - 12 : selectedSecond.hour)
-        ampm = selectedSecond.hour > 12 ? "pm" : "am"
+        if hourType == "12"
+        {
+            hourName = selectedSecond.hour > 12 ? selectedSecond.hour - 12 : selectedSecond.hour
+            if hourName == 0
+            {
+                hourName = 12
+            }
+        }
+        else
+        {
+            hourName = selectedSecond.hour
+        }
+        ampm = selectedSecond.hour >= 12 ? "pm" : "am"
     }
     
     
@@ -81,7 +88,7 @@ struct CalView: View
     {
         return HStack
         {
-            Stepper(String(format:"%02d",selectedSecond.hour))
+            Stepper(String(format:"%02d",hourName))
             {
                 selectedSecond = selectedSecond.nextHour
                 calcTime()
@@ -118,27 +125,28 @@ struct CalView: View
                 calcTime()
             }
             
-            
-            if hour24 == false
+            if hourType == "12"
             {
-                Picker("", selection: $ampm)
-                {
-                    Text("am")
-                        .tag("am")
-                    Text("pm")
-                        .tag("pm")
-                }
-                .pickerStyle(.automatic)
-                .frame(width: 75)
-                .onChange(of: ampm)
-                { oldValue, newValue in
-                    calcTime()
-                }
+                Text(ampm)
+            }
+            
+            Picker("",selection: $hourType)
+            {
+                Text("24")
+                    .tag("24")
+                Text("12")
+                    .tag("12")
+            }
+            .frame(width: 70)
+            .onChange(of: hourType)
+            { oldValue, newValue in
+                hourType = newValue
+                calcTime()
             }
             
             Button("Now")
             {
-                selectedSecond = Clocks.system.currentSecond // FIX
+                selectedSecond = Clocks.system.currentSecond // FIX - just change time?
                 calcTime()
             }
         }

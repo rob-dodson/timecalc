@@ -31,14 +31,12 @@ struct ContentView: View
             Text("To:")
                 .font(.largeTitle)
                 .foregroundColor(endColor)
-            
             CalView(selectedSecond:$endSecond,color:endColor)
            
             Spacer()
             
             Text("Differences:")
                 .font(.largeTitle)
-            
             calcdiff(start_second:$startSecond,end_second:$endSecond)
         }
         .frame(width: 400,height: 800)
@@ -123,6 +121,7 @@ struct ContentView: View
         .font(.body)
         .foregroundColor(.white)
         .padding()
+        .frame(width:350,alignment: .leading)
         .background()
         .cornerRadius(5.0)
     }
