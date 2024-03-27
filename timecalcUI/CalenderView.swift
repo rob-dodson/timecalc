@@ -1,5 +1,5 @@
 //
-//  CalView.swift
+//  CalenderView.swift
 //  timecalcUI
 //
 //  Created by Robert Dodson on 3/2/24.
@@ -10,7 +10,7 @@ import SwiftUI
 import Time
 
 
-struct CalView: View
+struct CalenderView: View
 {
     @Binding var selectedSecond : Fixed<Second>
    
@@ -19,10 +19,7 @@ struct CalView: View
     @State var selectedMonth : Fixed<Month> = Clocks.system.currentMonth
     @State var selectedDay : Fixed<Day> = Clocks.system.currentDay
     @State var monthName : String = Clocks.system.currentMonth.format(month:.naturalName)
-    @State var hourName : Int = Clocks.system.currentHour.hour
-    @State var ampm : String = "am"
-    @State var hourType : String = "24"
-    
+
     let consistentNumberOfWeeks = true
     
     
@@ -31,36 +28,25 @@ struct CalView: View
         VStack
         {
             calendarView
-            clockView
+            ClockView(selectedSecond: $selectedSecond)
         }
         .onAppear()
         {
-            calcTime()
+            update()
         }
         .onChange(of: selectedSecond) // changes from the differences view
         { oldValue, newValue in
             selectedSecond = newValue
-            calcTime()
+            update()
         }
     }
     
     
-    func calcTime()
+    func update()
     {
         selectedMonth = selectedSecond.fixedMonth
         monthName = selectedMonth.format(month:.naturalName)
         selectedDay = selectedSecond.fixedDay
-        ampm = selectedSecond.hour >= 12 ? "pm" : "am"
-        
-        hourName = selectedSecond.hour
-        if hourType == "12"
-        {
-            hourName = selectedSecond.hour > 12 ? selectedSecond.hour - 12 : selectedSecond.hour
-            if hourName == 0
-            {
-                hourName = 12
-            }
-        }
     }
     
     
@@ -83,75 +69,7 @@ struct CalView: View
     }
    
     
-    private var clockView: some View
-    {
-        return HStack
-        {
-            Stepper(String(format:"%02d",hourName))
-            {
-                selectedSecond = selectedSecond.nextHour
-                calcTime()
-            }
-            onDecrement:
-            {
-                selectedSecond = selectedSecond.previousHour
-                calcTime()
-            }
-            
-            Text(":")
-            
-            Stepper(String(format:"%02d",selectedSecond.minute))
-            {
-                selectedSecond = selectedSecond.nextMinute
-                calcTime()
-            }
-            onDecrement:
-            {
-                selectedSecond = selectedSecond.previousMinute
-                calcTime()
-            }
-            
-            Text(":")
-            
-            Stepper(String(format:"%02d",selectedSecond.second))
-            {
-                selectedSecond = selectedSecond.nextSecond
-                calcTime()
-            }
-            onDecrement:
-            {
-                selectedSecond = selectedSecond.previousSecond
-                calcTime()
-            }
-            
-            if hourType == "12"
-            {
-                Text(ampm)
-            }
-            
-            Picker("",selection: $hourType)
-            {
-                Text("24")
-                    .tag("24")
-                Text("12")
-                    .tag("12")
-            }
-            .frame(width: 70)
-            .onChange(of: hourType)
-            { oldValue, newValue in
-                hourType = newValue
-                calcTime()
-            }
-            
-            Button("Now")
-            {
-                selectedSecond = Clocks.system.currentSecond // FIX - just change time?
-                calcTime()
-            }
-        }
-    }
-    
-
+   
     private var weeksForCurrentMonth: Array<[Fixed<Day>]>
     {
         var allDays = Array(selectedMonth.days)
@@ -224,7 +142,7 @@ struct CalView: View
                 .onChange(of: monthName)
                 { oldValue, newValue in
                     setdate(day:selectedSecond.fixedDay,month:newValue)
-                    calcTime()
+                    update()
                 }
                 
                 // year stepper
@@ -236,12 +154,12 @@ struct CalView: View
                 onIncrement:
                 {
                     selectedSecond = selectedSecond.nextYear
-                    calcTime()
+                    update()
                 }
                 onDecrement:
                 {
                     selectedSecond = selectedSecond.previousYear
-                    calcTime()
+                    update()
                 }
                 
                 Spacer()
@@ -250,7 +168,7 @@ struct CalView: View
                 Button(action:
                 {
                     selectedSecond = selectedSecond.previousMonth
-                    calcTime()
+                    update()
                 })
                 {
                     Image(systemName: "arrowtriangle.backward.fill")
@@ -260,7 +178,7 @@ struct CalView: View
                 Button(action:
                 {
                     selectedSecond = Clocks.system.currentSecond
-                    calcTime()
+                    update()
                 })
                 {
                     Text("Today")
@@ -270,7 +188,7 @@ struct CalView: View
                 Button(action:
                 {
                     selectedSecond = selectedSecond.nextMonth
-                    calcTime()
+                    update()
                 })
                 {
                     Image(systemName: "arrowtriangle.forward.fill")
@@ -300,7 +218,7 @@ struct CalView: View
                     ForEach(week, id: \.self) 
                     { theday in
                         Toggle(isOn: Binding(get: { selectedDay == theday },
-                                             set: { _ in setdate(day:theday, month:monthName);calcTime() }))
+                                             set: { _ in setdate(day:theday, month:monthName);update() }))
                         {
                             Text(theday.format(day: .naturalDigits))
                                 .fixedSize() // prevent the text from wrapping
@@ -314,9 +232,6 @@ struct CalView: View
             }
         }
     }
-    
-   
-    
 }
 
 

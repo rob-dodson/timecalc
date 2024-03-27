@@ -14,7 +14,9 @@
 		AEA3A5232B93E3DA007CC808 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA3A5222B93E3DA007CC808 /* ContentView.swift */; };
 		AEA3A5252B93E3DC007CC808 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AEA3A5242B93E3DC007CC808 /* Assets.xcassets */; };
 		AEA3A5292B93E3DC007CC808 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AEA3A5282B93E3DC007CC808 /* Preview Assets.xcassets */; };
-		AEA3A52E2B93E6E7007CC808 /* CalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA3A52D2B93E6E7007CC808 /* CalView.swift */; };
+		AEA3A52E2B93E6E7007CC808 /* CalenderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA3A52D2B93E6E7007CC808 /* CalenderView.swift */; };
+		AEAB7C562BB475C200BA5BC6 /* ClockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAB7C552BB475C200BA5BC6 /* ClockView.swift */; };
+		AEAB7C582BB478C300BA5BC6 /* DifferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAB7C572BB478C300BA5BC6 /* DifferencesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,7 +40,9 @@
 		AEA3A5242B93E3DC007CC808 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AEA3A5262B93E3DC007CC808 /* timecalcUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = timecalcUI.entitlements; sourceTree = "<group>"; };
 		AEA3A5282B93E3DC007CC808 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		AEA3A52D2B93E6E7007CC808 /* CalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalView.swift; sourceTree = "<group>"; };
+		AEA3A52D2B93E6E7007CC808 /* CalenderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderView.swift; sourceTree = "<group>"; };
+		AEAB7C552BB475C200BA5BC6 /* ClockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockView.swift; sourceTree = "<group>"; };
+		AEAB7C572BB478C300BA5BC6 /* DifferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferencesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,7 +103,9 @@
 			isa = PBXGroup;
 			children = (
 				AEA3A5222B93E3DA007CC808 /* ContentView.swift */,
-				AEA3A52D2B93E6E7007CC808 /* CalView.swift */,
+				AEAB7C552BB475C200BA5BC6 /* ClockView.swift */,
+				AEA3A52D2B93E6E7007CC808 /* CalenderView.swift */,
+				AEAB7C572BB478C300BA5BC6 /* DifferencesView.swift */,
 				AEA3A5202B93E3DA007CC808 /* timecalcUIApp.swift */,
 				AEA3A5242B93E3DC007CC808 /* Assets.xcassets */,
 				AEA3A5262B93E3DC007CC808 /* timecalcUI.entitlements */,
@@ -225,7 +231,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				AEA3A5232B93E3DA007CC808 /* ContentView.swift in Sources */,
-				AEA3A52E2B93E6E7007CC808 /* CalView.swift in Sources */,
+				AEAB7C582BB478C300BA5BC6 /* DifferencesView.swift in Sources */,
+				AEAB7C562BB475C200BA5BC6 /* ClockView.swift in Sources */,
+				AEA3A52E2B93E6E7007CC808 /* CalenderView.swift in Sources */,
 				AEA3A5212B93E3DA007CC808 /* timecalcUIApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
