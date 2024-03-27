@@ -15,9 +15,13 @@ struct ClockView: View
     @Binding var selectedSecond : Fixed<Second>
     
     @State var hourName : Int = Clocks.system.currentHour.hour
-    @State var ampm : String = "am"
-    @State var hourType : String = "24"
+    @State var ampm : String = AM
+    @State var hourType : String = HOUR24
     
+    static let HOUR24 : String = "24"
+    static let HOUR12 : String = "12"
+    static let PM : String = "PM"
+    static let AM : String = "AM"
     
     var body: some View
     {
@@ -60,17 +64,17 @@ struct ClockView: View
                 update()
             }
             
-            if hourType == "12"
+            if hourType == ClockView.HOUR12
             {
                 Text(ampm)
             }
             
             Picker("",selection: $hourType)
             {
-                Text("24")
-                    .tag("24")
-                Text("12")
-                    .tag("12")
+                Text(ClockView.HOUR24)
+                    .tag(ClockView.HOUR24)
+                Text(ClockView.HOUR12)
+                    .tag(ClockView.HOUR12)
             }
             .frame(width: 70)
             .onChange(of: hourType)
@@ -81,7 +85,7 @@ struct ClockView: View
             
             Button("Now")
             {
-                selectedSecond = Clocks.system.currentSecond // FIX - change time only?
+                setnow()
                 update()
             }
         }
@@ -92,11 +96,32 @@ struct ClockView: View
         }
     }
     
+    
+    func setnow()
+    {
+        do
+        {
+            let now  = Clocks.system.currentSecond
+            selectedSecond = try Fixed<Second>(region: .current,
+                                               year: selectedSecond.year,
+                                               month: selectedSecond.month,
+                                               day:  selectedSecond.day,
+                                               hour: now.hour,
+                                               minute: now.minute,
+                                               second: now.second)
+        }
+        catch
+        {
+            print("setnow error: \(error)")
+        }
+    }
+    
+    
     func update()
     {
-        ampm = selectedSecond.hour >= 12 ? "pm" : "am"
+        ampm = selectedSecond.hour >= 12 ? ClockView.PM : ClockView.AM
         hourName = selectedSecond.hour
-        if hourType == "12"
+        if hourType == ClockView.HOUR12
         {
             hourName = selectedSecond.hour > 12 ? selectedSecond.hour - 12 : selectedSecond.hour
             if hourName == 0
