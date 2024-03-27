@@ -68,11 +68,11 @@ struct ContentView: View
         let diffminutes = startSecond.differenceInWholeMinutes(to: endSecond).minutes
         let diffseconds = startSecond.differenceInWholeSeconds(to: endSecond).seconds
         
-        
-      //  let plusmonths = diffmonths % 12
-     //   let plushours = diffhours % 24
-      //  let plusminutes = diffminutes % 60
-      //  let plusseconds = diffseconds % 60
+        let plusmonths = diffmonths % 12
+        let plusdays = diffdays % 30 // FIX - make smarter
+        let plushours = diffhours % 24
+        let plusminutes = diffminutes % 60
+        let plusseconds = diffseconds % 60
         
         let minus : String = startSecond.isAfter(endSecond) ? "-" : ""
 
@@ -87,11 +87,36 @@ struct ContentView: View
                 .foregroundColor(endColor)
                 .font(.headline)
             
-            Stepper("\(minus)\(plural(count:diffyears, amount:"year"))")     { endSecond = endSecond.nextYear } onDecrement:   { endSecond = endSecond.previousYear }
-            Stepper("\(minus)\(plural(count:diffmonths, amount:"month"))")   { endSecond = endSecond.nextMonth } onDecrement:  { endSecond = endSecond.previousMonth }
-            Stepper("\(minus)\(plural(count:diffhours, amount:"hour"))")     { endSecond = endSecond.nextHour } onDecrement:   { endSecond = endSecond.previousHour }
-            Stepper("\(minus)\(plural(count:diffdays, amount:"day"))")       { endSecond = endSecond.nextDay } onDecrement:    { endSecond = endSecond.previousDay }
-            Stepper("\(minus)\(plural(count:diffminutes, amount:"minute"))") { endSecond = endSecond.nextMinute } onDecrement: { endSecond = endSecond.previousMinute }
+            HStack
+            {
+                Stepper("\(minus)\(plural(count:diffyears, amount:"year"))")     { endSecond = endSecond.nextYear } onDecrement: { endSecond = endSecond.previousYear }
+                Text("+ \(plural(count:plusmonths, amount:"month"))").foregroundStyle(.gray)
+            }
+            
+            HStack
+            {
+                Stepper("\(minus)\(plural(count:diffmonths, amount:"month"))")   { endSecond = endSecond.nextMonth } onDecrement:  { endSecond = endSecond.previousMonth }
+                Text("+ \(plural(count:plusdays, amount:"day"))").foregroundStyle(.gray)
+            }
+            
+            HStack
+            {
+                Stepper("\(minus)\(plural(count:diffdays, amount:"day"))")       { endSecond = endSecond.nextDay } onDecrement: { endSecond = endSecond.previousDay }
+                Text("+ \(plural(count:plushours, amount:"hour"))").foregroundStyle(.gray)
+            }
+            
+            HStack
+            {
+                Stepper("\(minus)\(plural(count:diffhours, amount:"hour"))")     { endSecond = endSecond.nextHour } onDecrement:   { endSecond = endSecond.previousHour }
+                Text("+ \(plural(count:plusminutes, amount:"minute"))").foregroundStyle(.gray)
+            }
+            
+            HStack
+            {
+                Stepper("\(minus)\(plural(count:diffminutes, amount:"minute"))") { endSecond = endSecond.nextMinute } onDecrement: { endSecond = endSecond.previousMinute }
+                Text("+ \(plural(count:plusseconds, amount:"second"))").foregroundStyle(.gray)
+            }
+            
             Stepper("\(minus)\(plural(count:diffseconds, amount:"second"))") { endSecond = endSecond.nextSecond } onDecrement: { endSecond = endSecond.previousSecond }
 
         }
