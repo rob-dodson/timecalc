@@ -25,6 +25,7 @@ struct CalView: View
     
     let consistentNumberOfWeeks = true
     
+    
     var body: some View
     {
         VStack
@@ -49,6 +50,9 @@ struct CalView: View
         selectedMonth = selectedSecond.fixedMonth
         monthName = selectedMonth.format(month:.naturalName)
         selectedDay = selectedSecond.fixedDay
+        ampm = selectedSecond.hour >= 12 ? "pm" : "am"
+        
+        hourName = selectedSecond.hour
         if hourType == "12"
         {
             hourName = selectedSecond.hour > 12 ? selectedSecond.hour - 12 : selectedSecond.hour
@@ -57,11 +61,6 @@ struct CalView: View
                 hourName = 12
             }
         }
-        else
-        {
-            hourName = selectedSecond.hour
-        }
-        ampm = selectedSecond.hour >= 12 ? "pm" : "am"
     }
     
     
@@ -247,7 +246,7 @@ struct CalView: View
                 
                 Spacer()
                 
-                // Month Back
+                // Month back
                 Button(action:
                 {
                     selectedSecond = selectedSecond.previousMonth
@@ -301,7 +300,7 @@ struct CalView: View
                     ForEach(week, id: \.self) 
                     { theday in
                         Toggle(isOn: Binding(get: { selectedDay == theday },
-                                             set: { _ in setdate(day:theday,month: monthName);calcTime() }))
+                                             set: { _ in setdate(day:theday, month:monthName);calcTime() }))
                         {
                             Text(theday.format(day: .naturalDigits))
                                 .fixedSize() // prevent the text from wrapping
