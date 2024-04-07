@@ -15,13 +15,11 @@ struct ClockView: View
     @Binding var selectedSecond : Fixed<Second>
     
     @State var hourName : Int = Clocks.system.currentHour.hour
-    @State var ampm : String = AM
+    @State var ampm : String = Clocks.system.calendar.amSymbol
     @State var hourType : String = HOUR24
     
     static let HOUR24 : String = "24"
     static let HOUR12 : String = "12"
-    static let PM : String = "PM"
-    static let AM : String = "AM"
     
     var body: some View
     {
@@ -119,7 +117,7 @@ struct ClockView: View
     
     func update()
     {
-        ampm = selectedSecond.hour >= 12 ? ClockView.PM : ClockView.AM
+        ampm = selectedSecond.hour >= 12 ? selectedSecond.calendar.pmSymbol : selectedSecond.calendar.amSymbol
         hourName = selectedSecond.hour
         if hourType == ClockView.HOUR12
         {
