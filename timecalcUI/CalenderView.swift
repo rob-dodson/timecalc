@@ -37,7 +37,6 @@ struct CalenderView: View
         .onChange(of: selectedSecond) // changes from the differences view
         { oldValue, newValue in
             selectedSecond = newValue
-            update()
         }
     }
     
@@ -142,7 +141,6 @@ struct CalenderView: View
                 .onChange(of: monthName)
                 { oldValue, newValue in
                     setdate(day:selectedSecond.fixedDay,month:newValue)
-                    update()
                 }
                 
                 // year stepper
@@ -154,12 +152,10 @@ struct CalenderView: View
                 onIncrement:
                 {
                     selectedSecond = selectedSecond.nextYear
-                    update()
                 }
                 onDecrement:
                 {
                     selectedSecond = selectedSecond.previousYear
-                    update()
                 }
                 
                 Spacer()
@@ -168,7 +164,6 @@ struct CalenderView: View
                 Button(action:
                 {
                     selectedSecond = selectedSecond.previousMonth
-                    update()
                 })
                 {
                     Image(systemName: "arrowtriangle.backward.fill")
@@ -178,7 +173,6 @@ struct CalenderView: View
                 Button(action:
                 {
                     selectedSecond = Clocks.system.currentSecond
-                    update()
                 })
                 {
                     Text("Today")
@@ -188,11 +182,14 @@ struct CalenderView: View
                 Button(action:
                 {
                     selectedSecond = selectedSecond.nextMonth
-                    update()
                 })
                 {
                     Image(systemName: "arrowtriangle.forward.fill")
                 }
+            }
+            .onChange(of: selectedSecond)
+            { oldValue, newValue in
+                update()
             }
            
             
