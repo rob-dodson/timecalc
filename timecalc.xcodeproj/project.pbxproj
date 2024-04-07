@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AE33E9852BC30EFD0070B689 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = AE33E9842BC30EFD0070B689 /* README.md */; };
 		AE54A5112B93E81300F93B9D /* Time in Frameworks */ = {isa = PBXBuildFile; productRef = AE54A5102B93E81300F93B9D /* Time */; };
 		AE598DA22B9163FD00BB43A7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE598DA12B9163FD00BB43A7 /* main.swift */; };
 		AE598DAA2B91640F00BB43A7 /* Time in Frameworks */ = {isa = PBXBuildFile; productRef = AE598DA92B91640F00BB43A7 /* Time */; };
@@ -32,6 +33,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AE33E9842BC30EFD0070B689 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		AE598D9E2B9163FD00BB43A7 /* timecalc */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = timecalc; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE598DA12B9163FD00BB43A7 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		AEA3A51E2B93E3DA007CC808 /* timecalcUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = timecalcUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,6 +77,7 @@
 		AE598D952B9163FD00BB43A7 = {
 			isa = PBXGroup;
 			children = (
+				AE33E9842BC30EFD0070B689 /* README.md */,
 				AE598DA02B9163FD00BB43A7 /* timecalc */,
 				AEA3A51F2B93E3DA007CC808 /* timecalcUI */,
 				AE598D9F2B9163FD00BB43A7 /* Products */,
@@ -210,6 +213,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE33E9852BC30EFD0070B689 /* README.md in Resources */,
 				AEA3A5292B93E3DC007CC808 /* Preview Assets.xcassets in Resources */,
 				AEA3A5252B93E3DC007CC808 /* Assets.xcassets in Resources */,
 			);
