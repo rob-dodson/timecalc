@@ -25,41 +25,35 @@ struct ClockView: View
     {
         HStack
         {
-            Stepper(String(format:"%02d",hourName))
+            Stepper(selectedSecond.format(hour: .naturalDigits(dayPeriod: .none)))
             {
                 selectedSecond = selectedSecond.nextHour
-                update()
             }
         onDecrement:
             {
                 selectedSecond = selectedSecond.previousHour
-                update()
             }
             
             Text(":")
             
-            Stepper(String(format:"%02d",selectedSecond.minute))
+            Stepper(selectedSecond.format(minute: .twoDigits))
             {
                 selectedSecond = selectedSecond.nextMinute
-                update()
             }
         onDecrement:
             {
                 selectedSecond = selectedSecond.previousMinute
-                update()
             }
             
             Text(":")
             
-            Stepper(String(format:"%02d",selectedSecond.second))
+            Stepper(selectedSecond.format(second: .twoDigits))
             {
                 selectedSecond = selectedSecond.nextSecond
-                update()
             }
         onDecrement:
             {
                 selectedSecond = selectedSecond.previousSecond
-                update()
             }
             
             if hourType == ClockView.HOUR12
@@ -84,12 +78,10 @@ struct ClockView: View
             Button("Now")
             {
                 setnow()
-                update()
             }
         }
-        .onChange(of: selectedSecond) 
-        { oldValue, newValue in
-            selectedSecond = newValue
+        .onChange(of: selectedSecond)
+        {
             update()
         }
     }
@@ -100,13 +92,9 @@ struct ClockView: View
         do
         {
             let now  = Clocks.system.currentSecond
-            selectedSecond = try Fixed<Second>(region: .current,
-                                               year: selectedSecond.year,
-                                               month: selectedSecond.month,
-                                               day:  selectedSecond.day,
-                                               hour: now.hour,
-                                               minute: now.minute,
-                                               second: now.second)
+            selectedSecond = try selectedSecond.setting(hour: now.hour,
+                                                        minute: now.minute,
+                                                        second: now.second)
         }
         catch
         {
@@ -118,6 +106,7 @@ struct ClockView: View
     func update()
     {
         ampm = selectedSecond.hour >= 12 ? selectedSecond.calendar.pmSymbol : selectedSecond.calendar.amSymbol
+        
         hourName = selectedSecond.hour
         if hourType == ClockView.HOUR12
         {
