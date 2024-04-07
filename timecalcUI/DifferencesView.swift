@@ -88,15 +88,8 @@ struct DifferencesView: View
     }
     
     
-    func plural(count:Int,amount:String) -> String
+    func plural(count:Int,amount:String) -> AttributedString
     {
-        if count == 1
-        {
-            return "\(count) \(amount)"
-        }
-        else
-        {
-            return "\(count) \(amount)s"
-        }
+       return AttributedString(localized: "^[\(count) \(amount)](inflect: true)")
     }
 }
