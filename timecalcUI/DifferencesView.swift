@@ -27,6 +27,8 @@ struct DifferencesView: View
         let diffminutes = startSecond.differenceInWholeMinutes(to: endSecond).minutes
         let diffseconds = startSecond.differenceInWholeSeconds(to: endSecond).seconds
         
+        let difference = startSecond.difference(to: endSecond)
+        
         let plusmonths = diffmonths % 12
         let plusdays = diffdays % 30 // FIX - make smarter
         let plushours = diffhours % 24
