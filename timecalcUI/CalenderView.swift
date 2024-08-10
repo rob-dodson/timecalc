@@ -20,7 +20,6 @@ struct CalenderView: View
     
     @State var selectedMonth : Fixed<Month> = Clocks.system.currentMonth
     @State var selectedDay : Fixed<Day> = Clocks.system.currentDay
-   // @State var monthName : String = Clocks.system.currentMonth.format(month:.naturalName)
 
     let consistentNumberOfWeeks = true
     

@@ -22,7 +22,6 @@ struct ClockPicker: View
     var clock: any RegionalClock
     {
         Clocks.system(in: region)
-       // Clocks.system(in: Region(calendar: calendar, timeZone: timeZone, locale: locale))
     }
     
     var body: some View {

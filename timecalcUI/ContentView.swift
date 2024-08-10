@@ -61,7 +61,6 @@ struct ContentView: View
     
     func update()
     {
-       // let clock = Clocks.system(in: Region(calendar: calendar, timeZone: timeZone, locale: locale))
         region = Region(calendar: calendar, timeZone: timeZone, locale: locale)
         let clock = Clocks.system(in: region)
         
