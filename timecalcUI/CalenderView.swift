@@ -13,12 +13,14 @@ import Time
 struct CalenderView: View
 {
     @Binding var selectedSecond : Fixed<Second>
-   
+    @Binding var monthName : String
+    @Binding var region : Region
+    
     var color : Color = Color.white
     
     @State var selectedMonth : Fixed<Month> = Clocks.system.currentMonth
     @State var selectedDay : Fixed<Day> = Clocks.system.currentDay
-    @State var monthName : String = Clocks.system.currentMonth.format(month:.naturalName)
+   // @State var monthName : String = Clocks.system.currentMonth.format(month:.naturalName)
 
     let consistentNumberOfWeeks = true
     
@@ -37,8 +39,10 @@ struct CalenderView: View
         .onChange(of: selectedSecond) // changes from the differences view
         { oldValue, newValue in
             selectedSecond = newValue
+            monthName = selectedSecond.format(month: .naturalName)
         }
     }
+   
     
     
     func update()
@@ -53,9 +57,9 @@ struct CalenderView: View
     {
         do
         {
-            selectedSecond = try Fixed<Second>(region: .current,
+            selectedSecond = try Fixed<Second>(region: region,
                                                year: selectedSecond.year,
-                                               month: try Fixed<Month>(stringValue: month, rawFormat: "MMMM", region: Region.current).month,
+                                               month: try Fixed<Month>(stringValue: month, rawFormat: "MMMM", region: region).month,
                                                day: day.day,
                                                hour: selectedSecond.hour,
                                                minute: selectedSecond.minute,
@@ -130,10 +134,11 @@ struct CalenderView: View
                 // month picker
                 Picker("", selection: $monthName)
                 {
-                    ForEach(Calendar.current.monthSymbols, id: \.self)
+                    ForEach(selectedMonth.calendar.monthSymbols,id:\.self)
                     { month in
                         Text("\(month)")
                             .foregroundColor(color)
+                            .tag(month)
                     }
                 }
                 .pickerStyle(.automatic)

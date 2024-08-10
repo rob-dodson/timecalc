@@ -13,9 +13,12 @@ struct ContentView: View
     @State var calendar = Calendar.current
     @State var timeZone = TimeZone.current
     @State var locale = Locale.current
+    @State var region = Region.current
     
     @State var startSecond : Fixed<Second> = Clocks.system.currentSecond
     @State var endSecond   : Fixed<Second> = Clocks.system.currentSecond + .days(1)
+    @State var startMonthName : String = "January"
+    @State var endMonthName : String = "January"
     
     var startColor = Color.green
     var endColor = Color.cyan
@@ -25,21 +28,21 @@ struct ContentView: View
     {
         VStack(alignment: .leading)
         {
-            ClockPicker(calendar: $calendar,timeZone: $timeZone,locale: $locale)
+            ClockPicker(calendar: $calendar,timeZone: $timeZone,locale: $locale,region: $region)
             
             Spacer()
             
             Text("From:")
                 .font(.largeTitle)
                 .foregroundColor(startColor)
-            CalenderView(selectedSecond:$startSecond,color:startColor)
+            CalenderView(selectedSecond:$startSecond,monthName:$startMonthName,region:$region,color:startColor)
             
             Spacer()
             
             Text("To:")
                 .font(.largeTitle)
                 .foregroundColor(endColor)
-            CalenderView(selectedSecond:$endSecond,color:endColor)
+            CalenderView(selectedSecond:$endSecond,monthName:$endMonthName,region:$region,color:endColor)
            
             Spacer()
             
@@ -58,9 +61,15 @@ struct ContentView: View
     
     func update()
     {
-        let clock = Clocks.system(in: Region(calendar: calendar, timeZone: timeZone, locale: locale))
+       // let clock = Clocks.system(in: Region(calendar: calendar, timeZone: timeZone, locale: locale))
+        region = Region(calendar: calendar, timeZone: timeZone, locale: locale)
+        let clock = Clocks.system(in: region)
+        
         startSecond = clock.currentSecond
         endSecond = clock.currentSecond.nextDay
+        
+        startMonthName = startSecond.format(month:.naturalName)
+        endMonthName = endSecond.format(month:.naturalName)
     }
     
 }

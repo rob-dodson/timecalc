@@ -15,12 +15,14 @@ struct ClockPicker: View
     @Binding var calendar : Calendar
     @Binding var timeZone : TimeZone
     @Binding var locale : Locale
+    @Binding var region : Region
     
     @State var now: Fixed<Second>?
     
     var clock: any RegionalClock
     {
-        Clocks.system(in: Region(calendar: calendar, timeZone: timeZone, locale: locale))
+        Clocks.system(in: region)
+       // Clocks.system(in: Region(calendar: calendar, timeZone: timeZone, locale: locale))
     }
     
     var body: some View {
