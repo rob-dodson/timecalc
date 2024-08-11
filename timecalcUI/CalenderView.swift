@@ -58,7 +58,7 @@ struct CalenderView: View
         {
             selectedSecond = try Fixed<Second>(region: region,
                                                year: selectedSecond.year,
-                                               month: getMonthNum(month: month), //try Fixed<Month>(stringValue: month, rawFormat: "MMMM", region: region).month,
+                                               month: getMonthNum(month: month),
                                                day: day.day,
                                                hour: selectedSecond.hour,
                                                minute: selectedSecond.minute,
@@ -120,10 +120,12 @@ struct CalenderView: View
         }
     }
     
+    
     func getMonthNum(month:String) -> Int
     {
         return selectedMonth.calendar.monthSymbols.firstIndex(of: month)! + 1
     }
+    
     
     private var calendarView: some View
     {

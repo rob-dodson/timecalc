@@ -24,9 +24,12 @@ struct ClockPicker: View
         Clocks.system(in: region)
     }
     
-    var body: some View {
-        VStack(alignment: .center) {
-            if let now {
+    var body: some View
+    {
+        VStack(alignment: .center)
+        {
+            if let now
+            {
                 Text(now.format(date: .full))
                     .font(.title)
                 
@@ -36,7 +39,8 @@ struct ClockPicker: View
                 Divider()
             }
             
-            Form {
+            Form
+            {
                 CalendarPicker(calendar: $calendar)
                 TimeZonePicker(timeZone: $timeZone)
                 LocalePicker(locale: $locale)
