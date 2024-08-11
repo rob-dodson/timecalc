@@ -58,7 +58,7 @@ struct CalenderView: View
         {
             selectedSecond = try Fixed<Second>(region: region,
                                                year: selectedSecond.year,
-                                               month: try Fixed<Month>(stringValue: month, rawFormat: "MMMM", region: region).month,
+                                               month: getMonthNum(month: month), //try Fixed<Month>(stringValue: month, rawFormat: "MMMM", region: region).month,
                                                day: day.day,
                                                hour: selectedSecond.hour,
                                                minute: selectedSecond.minute,
@@ -120,6 +120,10 @@ struct CalenderView: View
         }
     }
     
+    func getMonthNum(month:String) -> Int
+    {
+        return selectedMonth.calendar.monthSymbols.firstIndex(of: month)! + 1
+    }
     
     private var calendarView: some View
     {
@@ -130,6 +134,15 @@ struct CalenderView: View
             // current month + movement controls
             HStack
             {
+                // Month back
+                Button(action:
+                        {
+                    selectedSecond = selectedSecond.previousMonth
+                })
+                {
+                    Image(systemName: "arrowtriangle.backward.fill")
+                }
+                
                 // month picker
                 Picker("", selection: $monthName)
                 {
@@ -137,15 +150,25 @@ struct CalenderView: View
                     { month in
                         Text("\(month)")
                             .foregroundColor(color)
-                            .tag(month)
                     }
                 }
                 .pickerStyle(.automatic)
                 .frame(width: 120)
                 .onChange(of: monthName)
                 { oldValue, newValue in
-                    setdate(day:selectedSecond.fixedDay,month:newValue)
+                    setdate(day:selectedSecond.fixedDay,month: newValue)
                 }
+                
+                // month forward
+                Button(action:
+                        {
+                    selectedSecond = selectedSecond.nextMonth
+                })
+                {
+                    Image(systemName: "arrowtriangle.forward.fill")
+                }
+                
+                Spacer()
                 
                 // year stepper
                 Stepper
@@ -164,28 +187,28 @@ struct CalenderView: View
                 
                 Spacer()
                 
-                // Month back
+                // day back
                 Button(action:
                 {
-                    selectedSecond = selectedSecond.previousMonth
+                    selectedSecond = selectedSecond.previousDay
                 })
                 {
                     Image(systemName: "arrowtriangle.backward.fill")
                 }
                 
-                // Month today
+                // today
                 Button(action:
                 {
-                    selectedSecond = Clocks.system.currentSecond
+                    selectedSecond = Clocks.custom(startingFrom:.init(date: .now),rate: 1.0,region: region).currentSecond    //Clocks.system.currentSecond
                 })
                 {
                     Text("Today")
                 }
                 
-                // month forward
+                // day forward
                 Button(action:
                 {
-                    selectedSecond = selectedSecond.nextMonth
+                    selectedSecond = selectedSecond.nextDay
                 })
                 {
                     Image(systemName: "arrowtriangle.forward.fill")
