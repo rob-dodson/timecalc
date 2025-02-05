@@ -50,7 +50,7 @@ struct ClockPicker: View
         }
         .onReceive(clock.strike(every: Second.self).publisher.receive(on: DispatchQueue.main), perform: { now = $0 })
         .font(.body)
-        .foregroundColor(.white)
+        .foregroundColor(Color(.controlTextColor))
         .padding()
         .frame(width:350,alignment: .leading)
         .background()

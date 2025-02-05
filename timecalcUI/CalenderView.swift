@@ -16,7 +16,7 @@ struct CalenderView: View
     @Binding var monthName : String
     @Binding var region : Region
     
-    var color : Color = Color.white
+    var color : Color = Color(.controlTextColor)
     
     @State var selectedMonth : Fixed<Month> = Clocks.system.currentMonth
     @State var selectedDay : Fixed<Day> = Clocks.system.currentDay
