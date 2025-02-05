@@ -26,36 +26,39 @@ struct ContentView: View
     
     var body: some View
     {
-        VStack(alignment: .leading)
+        ScrollView(.vertical, showsIndicators: true)
         {
-            ClockPicker(calendar: $calendar,timeZone: $timeZone,locale: $locale,region: $region)
-            
-            Spacer()
-            
-            Text("From:")
-                .font(.largeTitle)
-                .foregroundColor(startColor)
-            CalenderView(selectedSecond:$startSecond,monthName:$startMonthName,region:$region,color:startColor)
-            
-            Spacer()
-            
-            Text("To:")
-                .font(.largeTitle)
-                .foregroundColor(endColor)
-            CalenderView(selectedSecond:$endSecond,monthName:$endMonthName,region:$region,color:endColor)
-           
-            Spacer()
-            
-            Text("Differences:")
-                .font(.largeTitle)
-            DifferencesView(startSecond:$startSecond,endSecond:$endSecond,startColor: startColor,endColor: endColor)
+            VStack(alignment: .leading)
+            {
+                Spacer()
+                ClockPicker(calendar: $calendar,timeZone: $timeZone,locale: $locale,region: $region)
+                
+                Spacer()
+                
+                Text("From:")
+                    .font(.largeTitle)
+                    .foregroundColor(startColor)
+                CalenderView(selectedSecond:$startSecond,monthName:$startMonthName,region:$region,color:startColor)
+                
+                Spacer()
+                
+                Text("To:")
+                    .font(.largeTitle)
+                    .foregroundColor(endColor)
+                CalenderView(selectedSecond:$endSecond,monthName:$endMonthName,region:$region,color:endColor)
+                
+                Spacer()
+                
+                Text("Differences:")
+                    .font(.largeTitle)
+                DifferencesView(startSecond:$startSecond,endSecond:$endSecond,startColor: startColor,endColor: endColor)
+            }
+            .onAppear { update() }
+            .onChange(of: calendar, { update() })
+            .onChange(of: timeZone, { update() })
+            .onChange(of: locale, { update() })
+            .padding(20)
         }
-        .onAppear { update() }
-        .onChange(of: calendar, { update() })
-        .onChange(of: timeZone, { update() })
-        .onChange(of: locale, { update() })
-        .frame(width: 400,height: 800)
-        .padding()
     }
 
     
