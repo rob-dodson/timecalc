@@ -78,7 +78,7 @@ struct DifferencesView: View
             
         }
         .font(.body)
-        .foregroundColor(Color(.controlTextColor))
+        .foregroundColor(Color.primary)
         .padding()
         .frame(width:350,alignment: .leading)
         .background()

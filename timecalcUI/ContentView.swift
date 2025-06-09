@@ -59,6 +59,7 @@ struct ContentView: View
             .onChange(of: locale, { update() })
             .padding(20)
         }
+        
     }
 
     
